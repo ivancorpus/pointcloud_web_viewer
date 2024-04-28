@@ -39,9 +39,10 @@ else {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
   <head>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
-    <title>SRV Pointcloud Viewer</title>
+    <title>UABC visor de nubes de puntos en linea</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <!--[if lt IE 9]>
       <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -263,7 +264,25 @@ else {
           cPos.y  = cPos.y * mb;
           cPos.z  = cPos.z * mb;
         }
+function touch2Mouse(e)
+{
+  var theTouch = e.changedTouches[0];
+  var mouseEv;
 
+  switch(e.type)
+  {
+    case "touchstart": mouseEv="mousedown"; break;  
+    case "touchend":   mouseEv="mouseup"; break;
+    case "touchmove":  mouseEv="mousemove"; break;
+    default: return;
+  }
+
+  var mouseEvent = document.createEvent("MouseEvent");
+  mouseEvent.initMouseEvent(mouseEv, true, true, window, 1, theTouch.screenX, theTouch.screenY, theTouch.clientX, theTouch.clientY, false, false, false, false, 0, null);
+  theTouch.target.dispatchEvent(mouseEvent);
+
+  e.preventDefault();
+}
         // Handle colors and pointsize
         function onKeyDown(evt) {
           if (pointcloudLoaded) {
@@ -292,14 +311,16 @@ else {
         window.addEventListener('DOMMouseScroll', onMouseWheel, false);
         window.addEventListener('mousewheel', onMouseWheel, false);
         document.addEventListener("keydown", onKeyDown, false);
-
+document.addEventListener("touchstart", touch2Mouse, true);
+document.addEventListener("touchmove", touch2Mouse, true);
+document.addEventListener("touchend", touch2Mouse, true);
       });
     </script>
 
     <div id="container" style="width:100%; height:100%; position:relative;">
 
       <div id="controls-browser" style="position:absolute; top:5px; left:5px; z-index:999999; display:none;">
-        <a class="btn btn-sm btn-default" href="../home">Go home</a>
+        <a class="btn btn-sm btn-default" href="../datapointclouds2024">Go home</a>
         <p style="color:#aaa; margin-top:5px; font-size:12px;">
           - 1, 2, 3 &amp; 4 change color<br />
           - +/- change point size
